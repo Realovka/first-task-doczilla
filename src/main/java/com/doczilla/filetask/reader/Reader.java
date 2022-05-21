@@ -6,5 +6,7 @@ import java.io.File;
 import java.util.List;
 
 public interface Reader {
+
     String readStrings(List<File> files) throws CustomFileException;
+
 }
