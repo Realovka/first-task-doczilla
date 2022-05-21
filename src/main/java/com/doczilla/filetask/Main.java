@@ -1,34 +1,26 @@
 package com.doczilla.filetask;
 
+import com.doczilla.filetask.exception.CustomFileException;
+import com.doczilla.filetask.reader.Reader;
+import com.doczilla.filetask.reader.impl.FileReaderImpl;
+import com.doczilla.filetask.searcher.FileSearcher;
+import com.doczilla.filetask.searcher.impl.FileSearcherImpl;
+import com.doczilla.filetask.sorter.FileSorter;
+import com.doczilla.filetask.sorter.impl.FilesFileSorterImpl;
+
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws CustomFileException {
         File folder = new File("f://package");
         List<File> txtFiles = new ArrayList<>();
-        findTxtFiles(folder, txtFiles);
-        sortFilesByName(txtFiles);
-
-    }
-
-    public static void findTxtFiles(File folder, List<File> txtFiles) {
-        File[] folderEntries = folder.listFiles();
-        for (File entry : folderEntries) {
-            if (entry.isDirectory()) {
-                findTxtFiles(entry, txtFiles);
-            } else {
-                if (entry.isFile()) {
-                 txtFiles.add(entry);
-                }
-            }
-        }
-    }
-
-    public static void sortFilesByName(List<File> files) {
-        List<File> fileNames = files.stream().sorted().collect(Collectors.toList());
+        FileSearcher fileSearcher = new FileSearcherImpl();
+        fileSearcher.findTxtFiles(folder, txtFiles);
+        FileSorter fileSorter = new FilesFileSorterImpl();
+        List<File> files = fileSorter.sortFilesByName(txtFiles);
+        Reader reader = new FileReaderImpl();
+        String text = reader.readStrings(files);
     }
 }
